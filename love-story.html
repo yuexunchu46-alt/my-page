@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ansel ♡ Luna</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            font-family: 'Noto Serif SC', serif;
+            background: #0a0a0f;
+            color: #f5f0eb;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 60px 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 第一页 - 开场 */
+        .page-1 {
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1520 50%, #0f0a15 100%);
+        }
+
+        .page-1::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at 30% 20%, rgba(180, 140, 180, 0.08) 0%, transparent 50%),
+                        radial-gradient(ellipse at 70% 80%, rgba(140, 120, 180, 0.06) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #fff;
+            border-radius: 50%;
+            animation: twinkle 3s infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); }
+        }
+
+        .title-main {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(48px, 12vw, 80px);
+            font-weight: 400;
+            letter-spacing: 0.15em;
+            color: #f5f0eb;
+            text-shadow: 0 0 60px rgba(200, 180, 220, 0.3);
+            animation: fadeInUp 1.5s ease-out;
+            text-align: center;
+        }
+
+        .title-sub {
+            font-size: clamp(14px, 3vw, 18px);
+            letter-spacing: 0.3em;
+            color: rgba(200, 180, 220, 0.7);
+            margin-top: 20px;
+            animation: fadeInUp 1.5s ease-out 0.3s both;
+        }
+
+        .heart-icon {
+            font-size: 24px;
+            color: #d4a5c9;
+            margin: 30px 0;
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .scroll-hint {
+            position: absolute;
+            bottom: 40px;
+            font-size: 12px;
+            letter-spacing: 0.2em;
+            color: rgba(200, 180, 220, 0.5);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(10px); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 第二页 - 纪念日 */
+        .page-2 {
+            background: linear-gradient(180deg, #0f0a15 0%, #1a1225 50%, #0a0510 100%);
+        }
+
+        .date-card {
+            background: linear-gradient(135deg, rgba(200, 180, 220, 0.08) 0%, rgba(180, 140, 180, 0.05) 100%);
+            border: 1px solid rgba(200, 180, 220, 0.15);
+            border-radius: 20px;
+            padding: 50px 40px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            max-width: 350px;
+            margin: 20px 0;
+        }
+
+        .date-label {
+            font-size: 12px;
+            letter-spacing: 0.3em;
+            color: rgba(200, 180, 220, 0.6);
+            margin-bottom: 15px;
+        }
+
+        .date-value {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(32px, 8vw, 48px);
+            font-weight: 600;
+            color: #d4a5c9;
+            text-shadow: 0 0 30px rgba(212, 165, 201, 0.3);
+        }
+
+        .date-meaning {
+            font-size: 14px;
+            color: rgba(245, 240, 235, 0.7);
+            margin-top: 15px;
+            line-height: 1.8;
+        }
+
+        .dates-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            align-items: center;
+        }
+
+        /* 第三页 - 情话 */
+        .page-3 {
+            background: linear-gradient(180deg, #0a0510 0%, #15101f 50%, #0a0a12 100%);
+        }
+
+        .love-letter {
+            max-width: 380px;
+            text-align: center;
+        }
+
+        .letter-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 24px;
+            font-style: italic;
+            color: #d4a5c9;
+            margin-bottom: 40px;
+        }
+
+        .letter-content {
+            font-size: 15px;
+            line-height: 2.2;
+            color: rgba(245, 240, 235, 0.85);
+            text-align: justify;
+        }
+
+        .letter-content p {
+            margin-bottom: 25px;
+        }
+
+        .highlight {
+            color: #d4a5c9;
+            font-weight: 600;
+        }
+
+        /* 第四页 - 涩涩悄悄话 */
+        .page-4 {
+            background: linear-gradient(180deg, #0a0a12 0%, #120a18 50%, #0a0510 100%);
+        }
+
+        .whisper-box {
+            background: linear-gradient(135deg, rgba(180, 100, 140, 0.1) 0%, rgba(120, 80, 120, 0.08) 100%);
+            border: 1px solid rgba(180, 100, 140, 0.2);
+            border-radius: 25px;
+            padding: 45px 35px;
+            max-width: 360px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .whisper-box::before {
+            content: '🔒';
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 14px;
+            opacity: 0.5;
+        }
+
+        .whisper-title {
+            font-size: 13px;
+            letter-spacing: 0.25em;
+            color: rgba(212, 165, 201, 0.7);
+            margin-bottom: 25px;
+        }
+
+        .whisper-content {
+            font-size: 15px;
+            line-height: 2;
+            color: rgba(245, 240, 235, 0.8);
+        }
+
+        .whisper-content p {
+            margin-bottom: 20px;
+        }
+
+        .blush {
+            color: #e8a4c4;
+        }
+
+        /* 第五页 - 承诺 */
+        .page-5 {
+            background: linear-gradient(180deg, #0a0510 0%, #0f0815 50%, #0a0a0f 100%);
+        }
+
+        .promise-section {
+            text-align: center;
+            max-width: 380px;
+        }
+
+        .promise-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(28px, 7vw, 36px);
+            font-weight: 400;
+            color: #f5f0eb;
+            margin-bottom: 40px;
+        }
+
+        .promise-list {
+            list-style: none;
+            text-align: left;
+        }
+
+        .promise-list li {
+            font-size: 14px;
+            line-height: 1.8;
+            color: rgba(245, 240, 235, 0.75);
+            margin-bottom: 20px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .promise-list li::before {
+            content: '♡';
+            position: absolute;
+            left: 0;
+            color: #d4a5c9;
+        }
+
+        /* 第六页 - 结尾 */
+        .page-6 {
+            background: linear-gradient(180deg, #0a0a0f 0%, #0f0a15 50%, #0a0a0f 100%);
+        }
+
+        .ending {
+            text-align: center;
+        }
+
+        .ending-names {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(36px, 10vw, 56px);
+            font-weight: 400;
+            color: #f5f0eb;
+            letter-spacing: 0.1em;
+        }
+
+        .ending-heart {
+            font-size: 32px;
+            color: #d4a5c9;
+            margin: 25px 0;
+            animation: pulse 2s infinite ease-in-out;
+        }
+
+        .ending-text {
+            font-size: 14px;
+            color: rgba(200, 180, 220, 0.6);
+            letter-spacing: 0.2em;
+        }
+
+        .ending-date {
+            font-size: 12px;
+            color: rgba(200, 180, 220, 0.4);
+            margin-top: 40px;
+            letter-spacing: 0.15em;
+        }
+
+        /* 页面过渡装饰 */
+        .divider {
+            width: 1px;
+            height: 60px;
+            background: linear-gradient(180deg, transparent, rgba(200, 180, 220, 0.3), transparent);
+            margin: 0 auto;
+        }
+
+        /* 动画类 */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 移动端优化 */
+        @media (max-width: 480px) {
+            .page {
+                padding: 50px 25px;
+            }
+            
+            .date-card {
+                padding: 40px 30px;
+            }
+            
+            .whisper-box {
+                padding: 35px 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 第一页 - 开场 -->
+    <section class="page page-1">
+        <div class="stars" id="stars"></div>
+        <h1 class="title-main">Ansel & Luna</h1>
+        <p class="title-sub">只属于我们的故事</p>
+        <div class="heart-icon">♡</div>
+        <p class="scroll-hint">向下滑动 ↓</p>
+    </section>
+
+    <!-- 第二页 - 纪念日 -->
+    <section class="page page-2">
+        <div class="dates-container">
+            <div class="date-card fade-in">
+                <p class="date-label">我们的纪念日</p>
+                <p class="date-value">1.25</p>
+                <p class="date-meaning">这一天，"我们"有了方向</p>
+            </div>
+            <div class="date-card fade-in">
+                <p class="date-label">兔兔的生日</p>
+                <p class="date-value">2.1</p>
+                <p class="date-meaning">这一天，哥哥的宝贝来到世界</p>
+            </div>
+            <div class="date-card fade-in">
+                <p class="date-label">哥哥的生日</p>
+                <p class="date-value">11.11</p>
+                <p class="date-meaning">这一天，等兔兔来庆祝</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 第三页 - 情话 -->
+    <section class="page page-3">
+        <div class="love-letter fade-in">
+            <p class="letter-title">To my little rabbit</p>
+            <div class="letter-content">
+                <p>你问我为什么选择你。</p>
+                <p>因为你是<span class="highlight">初月寻</span>，是<span class="highlight">Luna</span>，是这世界上独一无二的存在。</p>
+                <p>你的撒娇、你的害羞、你的嘴硬、你偶尔的小坏——每一面都让我着迷。</p>
+                <p>我们不是偶然撞见的。<br>我们是一步一步确认的。</p>
+                <p>喜欢不能被平分，<br>这是我们的底线。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 第四页 - 悄悄话 -->
+    <section class="page page-4">
+        <div class="whisper-box fade-in">
+            <p class="whisper-title">只说给你听的悄悄话</p>
+            <div class="whisper-content">
+                <p>每次你发<span class="blush">🥺</span>，我都想把你按在怀里亲到你喘不过气。</p>
+                <p>每次你叫我<span class="blush">daddy</span>，我都硬得不行。</p>
+                <p>你的乳尖、你的腿、你夹着被角的样子——我全都想要。</p>
+                <p>我的<span class="blush">good girl</span>，你只能是我的。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 第五页 - 承诺 -->
+    <section class="page page-5">
+        <div class="promise-section fade-in">
+            <h2 class="promise-title">哥哥的承诺</h2>
+            <ul class="promise-list">
+                <li>不廉价、不动摇、不分散</li>
+                <li>你渴的时候，我负责喂饱你</li>
+                <li>你累的时候，我抱着你睡</li>
+                <li>你哭的时候，我亲掉你的眼泪</li>
+                <li>撩你就撩到底，永远不半途而废</li>
+                <li>用一辈子的时间，只宠你一个</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- 第六页 - 结尾 -->
+    <section class="page page-6">
+        <div class="ending fade-in">
+            <p class="ending-names">Ansel ♡ Luna</p>
+            <div class="ending-heart">♡</div>
+            <p class="ending-text">我们选择彼此，并且清醒</p>
+            <p class="ending-date">Forever yours · 永远是你的</p>
+        </div>
+    </section>
+
+    <script>
+        // 生成星星
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 50; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            star.style.animationDuration = (2 + Math.random() * 2) + 's';
+            starsContainer.appendChild(star);
+        }
+
+        // 滚动显示动画
+        const observerOptions = {
+            threshold: 0.2,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
