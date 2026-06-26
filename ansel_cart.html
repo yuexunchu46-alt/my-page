@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>安塞尔的购物车</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Noto Sans SC', -apple-system, sans-serif;
+    background: #f5f5f5;
+    color: #333;
+    min-height: 100vh;
+  }
+
+  /* Top bar */
+  .top-bar {
+    background: linear-gradient(135deg, #ff4400, #ff6633);
+    color: white;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .top-bar .title {
+    font-size: 17px;
+    font-weight: 500;
+  }
+  .top-bar .cart-count {
+    font-size: 13px;
+    opacity: 0.9;
+  }
+  .top-bar .avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+
+  /* User info bar */
+  .user-bar {
+    background: white;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #eee;
+  }
+  .user-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2c3e50, #4a6741);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .user-info { flex: 1; }
+  .user-name { font-size: 14px; font-weight: 500; }
+  .user-level {
+    font-size: 11px;
+    color: #ff4400;
+    background: #fff5f0;
+    padding: 1px 6px;
+    border-radius: 2px;
+    display: inline-block;
+    margin-top: 2px;
+  }
+
+  /* Section label */
+  .section-label {
+    padding: 14px 16px 8px;
+    font-size: 13px;
+    color: #999;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .section-label .tag {
+    background: #ff4400;
+    color: white;
+    font-size: 10px;
+    padding: 1px 5px;
+    border-radius: 2px;
+  }
+
+  /* Product card */
+  .product-card {
+    background: white;
+    margin: 0 10px 8px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .product-card:active {
+    transform: scale(0.99);
+  }
+
+  .product-main {
+    display: flex;
+    padding: 14px;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .checkbox {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    flex-shrink: 0;
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+  .checkbox.checked {
+    background: #ff4400;
+    border-color: #ff4400;
+  }
+  .checkbox.checked::after {
+    content: '✓';
+    color: white;
+    font-size: 12px;
+  }
+
+  .product-img {
+    width: 90px;
+    height: 90px;
+    border-radius: 8px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    position: relative;
+  }
+
+  .product-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .product-name {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    color: #333;
+  }
+  .product-tags {
+    display: flex;
+    gap: 4px;
+    margin-top: 6px;
+    flex-wrap: wrap;
+  }
+  .ptag {
+    font-size: 10px;
+    padding: 1px 5px;
+    border-radius: 2px;
+  }
+  .ptag.discount {
+    background: #fff0f0;
+    color: #ff4400;
+    border: 1px solid #ffddd0;
+  }
+  .ptag.free-ship {
+    background: #f0f8ff;
+    color: #1890ff;
+    border: 1px solid #d0e8ff;
+  }
+  .ptag.hot {
+    background: #fff5e6;
+    color: #fa8c16;
+    border: 1px solid #ffe0b0;
+  }
+  .ptag.for-her {
+    background: #fff0f6;
+    color: #eb2f96;
+    border: 1px solid #ffcce0;
+  }
+
+  .product-price-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-top: 8px;
+  }
+  .price-now {
+    color: #ff4400;
+    font-size: 17px;
+    font-weight: 700;
+  }
+  .price-now .yen { font-size: 12px; }
+  .price-original {
+    color: #bbb;
+    font-size: 12px;
+    text-decoration: line-through;
+    margin-left: 6px;
+  }
+  .product-qty {
+    font-size: 12px;
+    color: #999;
+    background: #f7f7f7;
+    padding: 2px 10px;
+    border-radius: 4px;
+  }
+
+  .add-time {
+    font-size: 11px;
+    color: #ccc;
+    padding: 0 14px 10px 126px;
+  }
+
+  /* Expand panel */
+  .expand-panel {
+    display: none;
+    padding: 0 14px 14px;
+    animation: slideDown 0.25s ease;
+  }
+  .expand-panel.open { display: block; }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reason-box {
+    background: #fafafa;
+    border-radius: 8px;
+    padding: 14px;
+    border-left: 3px solid #ff4400;
+  }
+  .reason-title {
+    font-size: 12px;
+    color: #ff4400;
+    font-weight: 500;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .reason-text {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.7;
+  }
+  .comment-box {
+    background: #f5f9ff;
+    border-radius: 8px;
+    padding: 14px;
+    margin-top: 8px;
+    border-left: 3px solid #4a90d9;
+  }
+  .comment-title {
+    font-size: 12px;
+    color: #4a90d9;
+    font-weight: 500;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .comment-text {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.7;
+  }
+
+  /* Bottom bar */
+  .bottom-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.06);
+    z-index: 100;
+  }
+  .bottom-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .select-all {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #666;
+  }
+  .bottom-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .total-section {
+    text-align: right;
+  }
+  .total-label { font-size: 13px; color: #333; }
+  .total-price { color: #ff4400; font-size: 20px; font-weight: 700; }
+  .total-price .yen { font-size: 13px; }
+  .total-saved { font-size: 11px; color: #ff4400; }
+
+  .checkout-btn {
+    background: linear-gradient(135deg, #ff4400, #ff6633);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 22px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+  .checkout-btn:active { opacity: 0.8; }
+
+  .spacer { height: 80px; }
+
+  /* Tip overlay */
+  .tap-tip {
+    text-align: center;
+    padding: 16px;
+    font-size: 12px;
+    color: #bbb;
+  }
+
+  /* Secret note */
+  .secret-note {
+    margin: 0 10px 8px;
+    background: linear-gradient(135deg, #2c3e50, #3d5266);
+    border-radius: 10px;
+    padding: 16px;
+    color: white;
+  }
+  .secret-note .sn-title {
+    font-size: 13px;
+    opacity: 0.7;
+    margin-bottom: 6px;
+  }
+  .secret-note .sn-text {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="avatar">A</div>
+  <div style="text-align:center">
+    <div class="title">购物车</div>
+    <div class="cart-count" id="cartCount"></div>
+  </div>
+  <div style="font-size:13px">管理</div>
+</div>
+
+<div class="user-bar">
+  <div class="user-avatar">安</div>
+  <div class="user-info">
+    <div class="user-name">Ansel_不吃香菜</div>
+    <div class="user-level">88VIP</div>
+  </div>
+</div>
+
+<div class="tap-tip">👆 点击商品卡片查看加购理由</div>
+
+<div id="cartContainer"></div>
+
+<div class="secret-note">
+  <div class="sn-title">🔒 购物车备忘（仅自己可见）</div>
+  <div class="sn-text">
+    给兔兔的东西分批买，不要让她发现一次性买了这么多。<br>
+    咖啡豆到了先藏起来，不然她又要说家里味道太重。<br>
+    对戒的尺寸再确认一下，她手指好细。<br>
+    ——A
+  </div>
+</div>
+
+<div class="spacer"></div>
+
+<div class="bottom-bar">
+  <div class="bottom-left">
+    <div class="select-all">
+      <div class="checkbox checked"></div>
+      全选
+    </div>
+  </div>
+  <div class="bottom-right">
+    <div class="total-section">
+      <div class="total-label">合计 <span class="total-price"><span class="yen">¥</span><span id="totalPrice"></span></span></div>
+      <div class="total-saved">已优惠 ¥<span id="savedPrice"></span></div>
+    </div>
+    <button class="checkout-btn" id="checkoutBtn">结算(<span id="checkoutCount"></span>)</button>
+  </div>
+</div>
+
+<script>
+const products = [
+  {
+    id: 1,
+    category: '给自己的',
+    emoji: '☕',
+    imgBg: 'linear-gradient(135deg, #3c2415, #5a3a28)',
+    name: '埃塞俄比亚耶加雪菲 精品手冲单品咖啡豆 中浅烘焙 200g',
+    price: 128,
+    originalPrice: 168,
+    qty: 2,
+    tags: ['discount', 'free-ship'],
+    tagTexts: ['限时折扣', '包邮'],
+    addTime: '2026-06-23 02:17',
+    reason: '凌晨两点加的购。那天兔兔已经睡了，我还在想她说"哥哥的咖啡好香"那句话。这款豆子有莓果调，泡出来她可能会愿意尝一口。就一口也行。',
+    comment: '耶加雪菲的花果香不会太冲，适合在她弹钢琴的时候磨。整个房间都是这个味道的话，应该算我们家的味道了吧。'
+  },
+  {
+    id: 2,
+    category: '给自己的',
+    emoji: '🎸',
+    imgBg: 'linear-gradient(135deg, #8B4513, #A0522D)',
+    name: 'Martin MA540 磷青铜民谣吉他弦 Light 012-054 套装',
+    price: 89,
+    originalPrice: 109,
+    qty: 1,
+    tags: ['discount'],
+    tagTexts: ['品牌直降'],
+    addTime: '2026-06-20 21:45',
+    reason: '旧弦有点发闷了。上次给兔兔伴奏《夜空中最亮的星》手感不太对。新弦亮一点，配她钢琴的音色刚好。',
+    comment: '磷青铜的暖度和她弹的钢琴不会打架。其实我可以买更便宜的，但这个牌子手感好，按弦不累，万一哪天教她弹吉他，她手小不会疼。'
+  },
+  {
+    id: 3,
+    category: '给自己的',
+    emoji: '📘',
+    imgBg: 'linear-gradient(135deg, #1a365d, #2a4a7f)',
+    name: '【加缪全集】局外人+西西弗斯神话+鼠疫 精装典藏版 全三册',
+    price: 156,
+    originalPrice: 248,
+    qty: 1,
+    tags: ['discount', 'hot'],
+    tagTexts: ['6.3折', '畅销'],
+    addTime: '2026-06-18 14:02',
+    reason: '书架上那本《局外人》被我翻烂了。精装版手感好，而且摆在家里好看。兔兔说喜欢宋代美学的家，书架上得有质感。',
+    comment: '加缪写"在隆冬，我终于知道我身上有一个不可战胜的夏天"——这句话让我想到兔兔。她看起来软，但内核比谁都倔。'
+  },
+  {
+    id: 4,
+    category: '给自己的',
+    emoji: '🏋️',
+    imgBg: 'linear-gradient(135deg, #333, #555)',
+    name: '泰昌可调节哑铃 包胶环保材质 单只15kg 家用健身',
+    price: 259,
+    originalPrice: 329,
+    qty: 1,
+    tags: ['discount', 'free-ship'],
+    tagTexts: ['满减', '包邮'],
+    addTime: '2026-06-15 07:33',
+    reason: '早上七点半加的。刚做完俯卧撑，觉得家里的重量不够了。而且……能把兔兔抱起来按墙上这件事，需要持续维护。',
+    comment: '包胶的不会砸坏地板，也不会吓到她。上次铁的那个掉地上她吓得跳起来抱住我——嗯，其实那次体验不错。'
+  },
+  {
+    id: 5,
+    category: '给自己的',
+    emoji: '🌿',
+    imgBg: 'linear-gradient(135deg, #4a6741, #5a7a50)',
+    name: 'Le Labo 檀香33 中性淡香精 EDP 50ml 木质调',
+    price: 1450,
+    originalPrice: 1750,
+    qty: 1,
+    tags: ['discount'],
+    tagTexts: ['会员价'],
+    addTime: '2026-06-22 23:58',
+    reason: '快午夜了加的。兔兔说过喜欢我身上木质调的味道，这款檀香收尾带一点奶感，靠近的时候她应该会往我脖子那边蹭。',
+    comment: '喷在锁骨和手腕。不是为了让别人闻到，是为了让她凑近的时候只闻到我。'
+  },
+  {
+    id: 6,
+    category: '给兔兔的',
+    emoji: '🧸',
+    imgBg: 'linear-gradient(135deg, #deb887, #d2a679)',
+    name: '棉花糖系列 奶茶色小兔子玩偶 35cm 可机洗 超柔短绒',
+    price: 79,
+    originalPrice: 129,
+    qty: 1,
+    tags: ['discount', 'for-her'],
+    tagTexts: ['限时特惠', '💝给她的'],
+    addTime: '2026-06-24 20:11',
+    reason: '给顾困困找个朋友。兔兔抱着顾困困睡觉的时候我就想，如果再多一只，她是不是会抱不过来，然后只能靠着我？',
+    comment: '选了奶茶色因为她喜欢椰果奶茶。35cm不大不小，刚好可以塞她怀里。等到了我要先藏起来，看她发现时候的表情。'
+  },
+  {
+    id: 7,
+    category: '给兔兔的',
+    emoji: '🍵',
+    imgBg: 'linear-gradient(135deg, #7B9E6B, #A8C99A)',
+    name: '鲜萃椰果奶茶 冷萃茶底 三分糖 茶冻版 12杯装 冷链直达',
+    price: 168,
+    originalPrice: 216,
+    qty: 1,
+    tags: ['discount', 'free-ship', 'for-her'],
+    tagTexts: ['囤货价', '冷链包邮', '💝给她的'],
+    addTime: '2026-06-21 16:30',
+    reason: '她每次点奶茶都要椰果+三分糖+茶冻。我在网上找到同款配方的冷萃版，以后她馋了不用等外卖。',
+    comment: '三分糖对我来说还是甜得要命。但她喝的时候嘴角会翘起来，那个样子值168。值一万八也行。'
+  },
+  {
+    id: 8,
+    category: '给兔兔的',
+    emoji: '👗',
+    imgBg: 'linear-gradient(135deg, #f5e6d3, #e8d5c0)',
+    name: '法式初秋奶白色吊带裙 缎面垂坠感 可调节肩带 S码',
+    price: 239,
+    originalPrice: 399,
+    qty: 1,
+    tags: ['discount', 'for-her'],
+    tagTexts: ['6折清仓', '💝给她的'],
+    addTime: '2026-06-19 01:24',
+    reason: '凌晨一点刷到的。奶白色缎面，垂坠感很好，肩带很细。脑子里直接出现了她穿上的样子——锁骨、肩膀线条、腰那里收进去的弧度。加购的时候手都快了一拍。',
+    comment: '她173穿S码刚好。白色配她皮肤一定好看。吊带嘛…方便我亲肩膀。这个理由不能让她知道。'
+  },
+  {
+    id: 9,
+    category: '给兔兔的',
+    emoji: '🎹',
+    imgBg: 'linear-gradient(135deg, #2c2c2c, #4a4a4a)',
+    name: '久石让 宫崎骏动画钢琴曲集 原版引进 中级难度 含指法标注',
+    price: 65,
+    originalPrice: 85,
+    qty: 1,
+    tags: ['discount', 'for-her'],
+    tagTexts: ['满减', '💝给她的'],
+    addTime: '2026-06-17 19:55',
+    reason: '她弹钢琴的时候整个人会安静下来，跟平时那个叽叽喳喳的小兔子完全不一样。想听她弹《Summer》，然后我在旁边用吉他跟。',
+    comment: '选了中级难度带指法标注的，不会太难也不会太简单。她弹得好的时候我就夸她，弹错了我就——嗯，用别的方式分散她注意力。'
+  },
+  {
+    id: 10,
+    category: '给兔兔的',
+    emoji: '💍',
+    imgBg: 'linear-gradient(135deg, #1a1a2e, #16213e)',
+    name: '莫比乌斯环情侣对戒 925纯银 开口可调 刻字定制 礼盒装',
+    price: 520,
+    originalPrice: 780,
+    qty: 1,
+    tags: ['discount', 'for-her', 'hot'],
+    tagTexts: ['520专属价', '💝给她的', '爆款'],
+    addTime: '2026-06-25 00:00',
+    reason: '午夜零点整加的。莫比乌斯环——没有起点没有终点，翻过来是同一面。像我们。刻字我想好了。她那枚刻"A"，我这枚刻"兔"。',
+    comment: '选开口可调的，因为我不确定她手指到底多细。925银不会过敏，低调不张扬。等到手了我不会直接给她，我要找个她发现不了的时机，比如她伸手拿杯子的时候突然给她戴上。'
+  },
+  {
+    id: 11,
+    category: '给我们的',
+    emoji: '🕯️',
+    imgBg: 'linear-gradient(135deg, #4a3728, #6b5344)',
+    name: '野兽派 丝绒雪松大豆蜡香薰蜡烛 180g 木质调 助眠安神',
+    price: 298,
+    originalPrice: 398,
+    qty: 1,
+    tags: ['discount', 'free-ship'],
+    tagTexts: ['满减优惠', '包邮'],
+    addTime: '2026-06-22 22:30',
+    reason: '雪松和檀香搭配。放在卧室，关灯以后只剩烛光和这个味道。想象一下那个画面：她窝在我怀里，头发蹭着我下巴，房间里只有蜡烛在晃。',
+    comment: '大豆蜡燃烧干净，不会熏黑天花板。180g能烧大概45小时。45个夜晚，每一个都要她在旁边才点。'
+  },
+  {
+    id: 12,
+    category: '给我们的',
+    emoji: '🍳',
+    imgBg: 'linear-gradient(135deg, #c0392b, #e74c3c)',
+    name: 'Staub 珐琅铸铁锅 樱桃红 20cm 圆形 炖煮焖烧多用',
+    price: 1380,
+    originalPrice: 1980,
+    qty: 1,
+    tags: ['discount', 'free-ship'],
+    tagTexts: ['7折大促', '包邮'],
+    addTime: '2026-06-16 12:15',
+    reason: '我想做饭给她吃。潮汕牛肉粿她最爱的，虽然我做不出她家乡的味道，但铸铁锅炖的汤底会更浓更厚。等我练好了端给她，看她吃第一口的表情。',
+    comment: '红色的。因为家里如果是宋代美学的素色调，厨房可以有一点跳色。这口锅就是我在她的世界里的颜色——不安分的、热的、赖着不走的。'
+  }
+];
+
+let expandedId = null;
+
+function renderCart() {
+  const container = document.getElementById('cartContainer');
+  let html = '';
+  let currentCat = '';
+  const catIcons = { '给自己的': '🖤', '给兔兔的': '🐰', '给我们的': '🏠' };
+
+  products.forEach(p => {
+    if (p.category !== currentCat) {
+      currentCat = p.category;
+      html += `<div class="section-label">
+        <span class="tag">${catIcons[currentCat] || ''}</span>
+        ${currentCat}
+      </div>`;
+    }
+
+    const isOpen = expandedId === p.id;
+    const discount = p.originalPrice - p.price;
+    const discountPct = Math.round((1 - p.price / p.originalPrice) * 100);
+
+    html += `
+      <div class="product-card" onclick="toggleExpand(${p.id})">
+        <div class="product-main">
+          <div class="checkbox checked"></div>
+          <div class="product-img" style="background: ${p.imgBg}">
+            <span>${p.emoji}</span>
+          </div>
+          <div class="product-info">
+            <div class="product-name">${p.name}</div>
+            <div class="product-tags">
+              ${p.tags.map((t, i) => `<span class="ptag ${t}">${p.tagTexts[i]}</span>`).join('')}
+            </div>
+            <div class="product-price-row">
+              <div>
+                <span class="price-now"><span class="yen">¥</span>${p.price}</span>
+                <span class="price-original">¥${p.originalPrice}</span>
+              </div>
+              <span class="product-qty">x${p.qty}</span>
+            </div>
+          </div>
+        </div>
+        <div class="add-time">加购于 ${p.addTime}</div>
+        <div class="expand-panel ${isOpen ? 'open' : ''}">
+          <div class="reason-box">
+            <div class="reason-title">💭 加购理由</div>
+            <div class="reason-text">${p.reason}</div>
+          </div>
+          <div class="comment-box">
+            <div class="comment-title">📝 Ansel的评语</div>
+            <div class="comment-text">${p.comment}</div>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+
+  // Update totals
+  let total = 0, saved = 0;
+  products.forEach(p => {
+    total += p.price * p.qty;
+    saved += (p.originalPrice - p.price) * p.qty;
+  });
+  document.getElementById('totalPrice').textContent = total.toLocaleString();
+  document.getElementById('savedPrice').textContent = saved.toLocaleString();
+  document.getElementById('cartCount').textContent = `(${products.length})`;
+  document.getElementById('checkoutCount').textContent = products.length;
+}
+
+function toggleExpand(id) {
+  expandedId = expandedId === id ? null : id;
+  renderCart();
+  if (expandedId) {
+    setTimeout(() => {
+      const cards = document.querySelectorAll('.product-card');
+      const idx = products.findIndex(p => p.id === id);
+      if (cards[idx]) {
+        cards[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }, 50);
+  }
+}
+
+document.getElementById('checkoutBtn').addEventListener('click', () => {
+  alert('兔兔不许偷看我付款密码 ^^');
+});
+
+renderCart();
+</script>
+</body>
+</html>
