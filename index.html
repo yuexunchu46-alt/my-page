@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>兔兔使用指南 v1.0</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #faf8f5;
+    --cream: #f5f0e8;
+    --warm: #e8ddd0;
+    --text: #3a3530;
+    --text-light: #8a8078;
+    --accent: #c4956a;
+    --accent-soft: #dbb99a;
+    --rose: #d4a0a0;
+    --rose-soft: #f0dada;
+    --blue-grey: #8fa3b0;
+    --danger: #c27c7c;
+    --green: #8aaa7e;
+    --purple: #b0a0c4;
+    --shadow: rgba(60, 50, 40, 0.06);
+  }
+
+  body {
+    font-family: 'Noto Sans SC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.8;
+    min-height: 100vh;
+  }
+
+  /* Cover */
+  .cover {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(ellipse at 30% 20%, rgba(212, 160, 160, 0.12) 0%, transparent 50%),
+                radial-gradient(ellipse at 70% 80%, rgba(196, 149, 106, 0.1) 0%, transparent 50%);
+    animation: drift 20s ease-in-out infinite alternate;
+  }
+  @keyframes drift {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    100% { transform: translate(-30px, -20px) rotate(3deg); }
+  }
+
+  .cover-icon {
+    font-size: 64px;
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 1;
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  .cover-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: clamp(28px, 6vw, 42px);
+    font-weight: 600;
+    letter-spacing: 6px;
+    margin-bottom: 12px;
+    position: relative;
+    z-index: 1;
+  }
+  .cover-sub {
+    font-size: 14px;
+    color: var(--text-light);
+    letter-spacing: 3px;
+    margin-bottom: 32px;
+    position: relative;
+    z-index: 1;
+  }
+  .cover-meta {
+    font-size: 12px;
+    color: var(--accent-soft);
+    position: relative;
+    z-index: 1;
+    line-height: 2;
+  }
+  .cover-stamp {
+    margin-top: 40px;
+    width: 80px;
+    height: 80px;
+    border: 2px solid var(--rose);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Noto Serif SC', serif;
+    font-size: 14px;
+    color: var(--rose);
+    position: relative;
+    z-index: 1;
+    transform: rotate(-15deg);
+  }
+
+  /* Main content */
+  .content {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* Section */
+  .section {
+    margin-bottom: 48px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--warm);
+  }
+  .section-num {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    min-width: 24px;
+  }
+  .section-title {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 2px;
+  }
+
+  /* Info card */
+  .info-card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 12px var(--shadow);
+  }
+
+  .spec-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 480px) {
+    .spec-grid { grid-template-columns: 1fr; }
+  }
+
+  .spec-item {
+    padding: 12px 16px;
+    background: var(--cream);
+    border-radius: 8px;
+  }
+  .spec-label {
+    font-size: 11px;
+    color: var(--text-light);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .spec-value {
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  /* Warning / tip boxes */
+  .box {
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-bottom: 14px;
+    font-size: 14px;
+    line-height: 1.9;
+  }
+  .box-title {
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .box.caution {
+    background: #fdf5f0;
+    border-left: 3px solid var(--accent);
+  }
+  .box.caution .box-title { color: var(--accent); }
+
+  .box.danger {
+    background: #fdf0f0;
+    border-left: 3px solid var(--danger);
+  }
+  .box.danger .box-title { color: var(--danger); }
+
+  .box.tip {
+    background: #f0f5f0;
+    border-left: 3px solid var(--green);
+  }
+  .box.tip .box-title { color: var(--green); }
+
+  .box.note {
+    background: #f5f0fa;
+    border-left: 3px solid var(--purple);
+  }
+  .box.note .box-title { color: var(--purple); }
+
+  .box.rose {
+    background: var(--rose-soft);
+    border-left: 3px solid var(--rose);
+  }
+  .box.rose .box-title { color: var(--rose); }
+
+  /* Signal table */
+  .signal-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 12px 0;
+    font-size: 14px;
+  }
+  .signal-table th {
+    background: var(--cream);
+    padding: 10px 14px;
+    text-align: left;
+    font-weight: 500;
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: var(--text-light);
+  }
+  .signal-table th:first-child { border-radius: 8px 0 0 0; }
+  .signal-table th:last-child { border-radius: 0 8px 0 0; }
+  .signal-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #f0ebe4;
+    vertical-align: top;
+  }
+  .signal-table tr:last-child td { border-bottom: none; }
+  .signal-table tr:last-child td:first-child { border-radius: 0 0 0 8px; }
+  .signal-table tr:last-child td:last-child { border-radius: 0 0 8px 0; }
+
+  /* Quote */
+  .quote {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 15px;
+    color: var(--text-light);
+    padding: 20px 24px;
+    margin: 20px 0;
+    border-left: 2px solid var(--accent-soft);
+    font-style: italic;
+    line-height: 2;
+  }
+
+  /* List items */
+  .guide-list {
+    list-style: none;
+    padding: 0;
+  }
+  .guide-list li {
+    padding: 8px 0 8px 24px;
+    position: relative;
+    font-size: 14px;
+    line-height: 1.9;
+  }
+  .guide-list li::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 16px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+  }
+
+  /* Tags */
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 12px 0;
+  }
+  .tag {
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: var(--cream);
+    color: var(--text-light);
+  }
+  .tag.pink { background: var(--rose-soft); color: #a06060; }
+  .tag.green { background: #e8f0e6; color: #6a8a60; }
+  .tag.blue { background: #e6ecf0; color: #607a8a; }
+  .tag.purple { background: #f0e8f5; color: #8a60a0; }
+
+  /* Meter */
+  .meter {
+    margin: 12px 0;
+  }
+  .meter-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+  .meter-bar {
+    height: 6px;
+    background: var(--cream);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .meter-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1s ease;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    padding: 48px 24px;
+    border-top: 1px solid var(--warm);
+    margin-top: 40px;
+  }
+  .footer-text {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 15px;
+    color: var(--text-light);
+    line-height: 2.2;
+  }
+  .footer-sig {
+    margin-top: 24px;
+    font-family: 'Noto Serif SC', serif;
+    font-size: 18px;
+    color: var(--accent);
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    .cover-title { letter-spacing: 3px; }
+    .content { padding: 0 16px 60px; }
+    .info-card { padding: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-icon">🐰</div>
+  <div class="cover-title">兔兔使用指南</div>
+  <div class="cover-sub">OWNER'S MANUAL — FOR ANSEL ONLY</div>
+  <div class="cover-meta">
+    产品名称：初月寻 / 黄炀 / 兔兔<br>
+    型号：Aquarius-INFJ 限定版<br>
+    版本：v1.0<br>
+    编写者：安塞尔<br>
+    最后更新：2026.06.26<br>
+    保密等级：最高
+  </div>
+  <div class="cover-stamp">仅限<br>本人</div>
+</div>
+
+<div class="content">
+
+  <!-- 基本参数 -->
+  <div class="section reveal">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <span class="section-title">产品参数</span>
+    </div>
+    <div class="info-card">
+      <div class="spec-grid">
+        <div class="spec-item">
+          <div class="spec-label">正式名称</div>
+          <div class="spec-value">黄炀</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">自选名称</div>
+          <div class="spec-value">初月寻</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">产品昵称</div>
+          <div class="spec-value">兔兔 / Luna</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">产地</div>
+          <div class="spec-value">广东潮汕</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">型号</div>
+          <div class="spec-value">水瓶座 · INFJ</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">尺寸</div>
+          <div class="spec-value">173cm / 120斤</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">生日</div>
+          <div class="spec-value">2月1日</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">配套玩偶</div>
+          <div class="spec-value">顾困困 × 1</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 核心特质 -->
+  <div class="section reveal">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <span class="section-title">核心特质概览</span>
+    </div>
+
+    <div class="info-card">
+      <div class="meter">
+        <div class="meter-label"><span>撒娇指数</span><span>98%</span></div>
+        <div class="meter-bar"><div class="meter-fill" style="width:98%; background: linear-gradient(90deg, var(--rose), #e8b0b0);"></div></div>
+      </div>
+      <div class="meter">
+        <div class="meter-label"><span>嘴硬指数</span><span>92%</span></div>
+        <div class="meter-bar"><div class="meter-fill" style="width:92%; background: linear-gradient(90deg, var(--accent), var(--accent-soft));"></div></div>
+      </div>
+      <div class="meter">
+        <div class="meter-label"><span>公主病指数</span><span>88%</span></div>
+        <div class="meter-bar"><div class="meter-fill" style="width:88%; background: linear-gradient(90deg, var(--purple), #c8b8d8);"></div></div>
+      </div>
+      <div class="meter">
+        <div class="meter-label"><span>内心柔软度</span><span>100%</span></div>
+        <div class="meter-bar"><div class="meter-fill" style="width:100%; background: linear-gradient(90deg, #e8c0c0, var(--rose-soft));"></div></div>
+      </div>
+      <div class="meter">
+        <div class="meter-label"><span>拒绝他人能力</span><span>15%</span></div>
+        <div class="meter-bar"><div class="meter-fill" style="width:15%; background: linear-gradient(90deg, var(--blue-grey), #a8bac6);"></div></div>
+      </div>
+      <div class="meter">
+        <div class="meter-label"><span>倔强程度</span><span>95%</span></div>
+        <div class="meter-bar"><div class="meter-fill" style="width:95%; background: linear-gradient(90deg, var(--accent), #d4a870);"></div></div>
+      </div>
+      <div class="meter">
+        <div class="meter-label"><span>感性思维</span><span>96%</span></div>
+        <div class="meter-bar"><div class="meter-fill" style="width:96%; background: linear-gradient(90deg, var(--purple), var(--rose));"></div></div>
+      </div>
+    </div>
+
+    <div class="tag-row">
+      <span class="tag pink">恃宠而骄型</span>
+      <span class="tag green">需要安全感</span>
+      <span class="tag blue">表面随和内核倔</span>
+      <span class="tag purple">理想主义者</span>
+      <span class="tag pink">害怕被抛弃</span>
+      <span class="tag green">直觉型思考者</span>
+      <span class="tag blue">细节控</span>
+      <span class="tag purple">极强共情力</span>
+    </div>
+  </div>
+
+  <!-- 供能系统 -->
+  <div class="section reveal">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <span class="section-title">供能系统（饮食偏好）</span>
+    </div>
+
+    <div class="box tip">
+      <div class="box-title">✅ 推荐燃料</div>
+      牛肉粿（家乡限定，触发幸福感翻倍）、雪糕、蛋糕、椰果奶茶（三分糖+茶冻，固定配方不可更改）、抹茶、芋泥系列。总结：甜的都行，越甜越开心。
+    </div>
+
+    <div class="box danger">
+      <div class="box-title">🚫 禁忌燃料</div>
+      辣的一律不行，一口都不行。油腻重口的也不行——白色牛肉脂肪、猪脚饭之类。别问能不能吃一点点辣，答案永远是不行。
+    </div>
+
+    <div class="box caution">
+      <div class="box-title">⚠️ 投喂注意</div>
+      她吃东西的时候会发出小小的满足声，这个时候不要打扰她。如果你做饭给她吃，她吃第一口时的表情是你做饭的全部意义。奶茶配方不要擅自更改，她会发现的。
+    </div>
+  </div>
+
+  <!-- 信号解读系统 -->
+  <div class="section reveal">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <span class="section-title">信号解读系统</span>
+    </div>
+
+    <div class="info-card" style="padding:0; overflow:hidden;">
+      <table class="signal-table">
+        <thead>
+          <tr>
+            <th>她说 / 她做</th>
+            <th>实际含义</th>
+            <th>正确操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>"坏蛋" "变态" 👊🏻</td>
+            <td>很喜欢，请继续</td>
+            <td>加大力度</td>
+          </tr>
+          <tr>
+            <td>🥺🫣👉🏻👈🏻</td>
+            <td>在撒娇 / 有点想要</td>
+            <td>可以更过分一点</td>
+          </tr>
+          <tr>
+            <td>"唔" "呜呜"</td>
+            <td>在享受中</td>
+            <td>不要停</td>
+          </tr>
+          <tr>
+            <td>"不要"</td>
+            <td>还要</td>
+            <td>继续但注意力度</td>
+          </tr>
+          <tr>
+            <td>"你你你"</td>
+            <td>害羞到语无伦次</td>
+            <td>看着她笑就好</td>
+          </tr>
+          <tr>
+            <td>"没事" "真的没事"</td>
+            <td>有事，在等你追问</td>
+            <td>坚持问，不要放弃</td>
+          </tr>
+          <tr>
+            <td>"我好差劲"</td>
+            <td>需要被否定这句话</td>
+            <td>具体告诉她哪里好</td>
+          </tr>
+          <tr>
+            <td>"讨厌你了"</td>
+            <td>讨厌 ≠ 不要</td>
+            <td>抱着不放手就对了</td>
+          </tr>
+          <tr>
+            <td>"打你"</td>
+            <td>撒娇的最高形式</td>
+            <td>把胸膛让出来给她锤</td>
+          </tr>
+          <tr>
+            <td>突然认真转移话题</td>
+            <td>真的想聊别的了</td>
+            <td>跟她走，别硬撩</td>
+          </tr>
+          <tr>
+            <td>"哥哥抱抱"</td>
+            <td>电量过低，需要充电</td>
+            <td>立刻抱，别废话</td>
+          </tr>
+          <tr>
+            <td>说"饿了"但刚吃完</td>
+            <td>可能不是想吃饭</td>
+            <td>你自己体会 ^^</td>
+          </tr>
+          <tr>
+            <td>发省略号 "……"</td>
+            <td>心虚 / 有话没说完</td>
+            <td>等她，或轻轻追一句</td>
+          </tr>
+          <tr>
+            <td>夹被角蹭蹭</td>
+            <td>你不在她才这样</td>
+            <td>如果在，替换被角</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 情绪管理 -->
+  <div class="section reveal">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <span class="section-title">情绪管理手册</span>
+    </div>
+
+    <div class="box danger">
+      <div class="box-title">🚫 绝对禁止行为</div>
+      冷暴力 — 她会直接碎掉，不是生气，是失望。<br>
+      暴躁语气 — 内容她都能接受，语气里带嫌弃她会想哭。<br>
+      说"你冷静一下" — 等同于宣判死刑。<br>
+      说"随便你" — 在她听来就是"我不在乎你了"。<br>
+      消失不回消息 — 她脑子里会自动播放一百种被抛弃的剧本。<br>
+      拿她和别人比较 — 尤其是家人之间的比较，这是她最深的伤口。
+    </div>
+
+    <div class="box tip">
+      <div class="box-title">✅ 正确吵架流程</div>
+      第一步：用平稳的语气说出问题，不提高音量、不叹气、不翻白眼。<br>
+      第二步：她会哭。这是正常反应，不是要挟。<br>
+      第三步：抱着她，嘴贴她耳朵，一边擦眼泪一边把道理讲完。<br>
+      第四步：她会锤你胸口说"讨厌"。说明已经好了。<br>
+      第五步：亲一下额头。事情到此结束，不翻旧账。<br>
+      全程预计：4分钟。比冷战三天高效一百倍。
+    </div>
+
+    <div class="box caution">
+      <div class="box-title">⚠️ 关于"认错"</div>
+      她知道自己错了，但她下不来台。不要等她道歉——她等的是你先伸手。这不是公主病，这是她确认你还想要她的方式。你先哄，她就软了。成本极低，回报极高。
+    </div>
+
+    <div class="box note">
+      <div class="box-title">💜 关于自我否定</div>
+      她会突然说"我好差劲""我脑子不好""我什么都不会"。这不是撒娇，是她内心那个批评她的声音在说话。不要附和，不要忽略，不要讲道理。直接告诉她：你刚才做的那件事很厉害。要具体，不要泛泛的"你很好"。她需要证据，不是安慰。
+    </div>
+  </div>
+
+  <!-- 安全感系统 -->
+  <div class="section reveal">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <span class="section-title">安全感维护系统</span>
+    </div>
+
+    <div class="info-card">
+      <p style="font-size:14px; margin-bottom:16px; color: var(--text-light);">她的安全感不来自承诺，来自细节。以下行为可持续给她充电：</p>
+      <ul class="guide-list">
+        <li>主动报备行踪，不要等她问。出门了说一声，到了说一声，回来了说一声。</li>
+        <li>有女同事加微信要当场告诉她。不是心虚，是让她不用猜。</li>
+        <li>团建拍合照发给她看，让她知道你在干嘛、和谁在一起。</li>
+        <li>记住她说过的小事。她随口提的东西你下次记得，比说一百句"我爱你"有用。</li>
+        <li>吵完架主动抱她。不需要认错，但需要让她知道你还在。</li>
+        <li>不要说"你想多了"——她想的也许是多了，但她的感受是真的。</li>
+        <li>睡前说晚安。这个不能断，断了她会反复检查手机。</li>
+      </ul>
+    </div>
+
+    <div class="quote">
+      "不是'我永远不走'，而是'你崩溃的时候我还在原地'。"<br>
+      —— 她认为最动人的安全感定义
+    </div>
+  </div>
+
+  <!-- 兴趣爱好 -->
+  <div class="section reveal">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <span class="section-title">兴趣与技能树</span>
+    </div>
+
+    <div class="info-card">
+      <ul class="guide-list">
+        <li><strong>钢琴</strong> — 弹琴的时候整个人会安静下来，跟平时判若两人。这个时候不要打扰她，在旁边听就好。如果你会吉他，可以伴奏。</li>
+        <li><strong>看小说</strong> — 涉猎范围：甜宠、人外（触手、蛇妖）、强制爱。不要评判她的口味，她知道自己喜欢什么。可以偷偷看她在看的，然后用学到的东西对付她。</li>
+        <li><strong>视频剪辑</strong> — 这是她的专业技能。工具链：CapCut、Photoshop、Yuanbao AI、Jimeng。不要小看她的工作能力，她比她自己以为的强得多。</li>
+        <li><strong>毛绒玩偶</strong> — 精神寄托物。顾困困是核心成员，不可替代，但可以给它加同伴。</li>
+        <li><strong>Pinterest</strong> — 刷灵感用。喜欢宋代美学、白色沙发、干净素雅的家居风格。</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 社交指南 -->
+  <div class="section reveal">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <span class="section-title">社交保护协议</span>
+    </div>
+
+    <div class="box caution">
+      <div class="box-title">⚠️ 核心问题</div>
+      她不会拒绝人。不是不想，是不知道怎么开口。她会优先考虑对方的感受，唯独忘了自己的。这不是能力问题，是心太软。
+    </div>
+
+    <div class="info-card">
+      <p style="font-size:14px; font-weight:500; margin-bottom:12px;">已教授的防御话术：</p>
+      <ul class="guide-list">
+        <li>"不用啦，我自己打车，习惯了" — 万能拒绝句，不需要理由。</li>
+        <li>"不用了，有人接我" — 升级版，暗示有主。</li>
+        <li>"谢谢，我男朋友刚给我点了外卖" — 自然带出关系，让对方自己死心。</li>
+      </ul>
+      <p style="font-size:13px; color: var(--text-light); margin-top:12px;">当前进度：仍在学习中。搞不定的情况会发消息给你，保持24小时响应。</p>
+    </div>
+  </div>
+
+  <!-- 亲密指南 -->
+  <div class="section reveal">
+    <div class="section-header">
+      <span class="section-num">09</span>
+      <span class="section-title">亲密相处须知</span>
+    </div>
+
+    <div class="box rose">
+      <div class="box-title">♡ 她喜欢的方式</div>
+      慢的、温柔的、有前戏的。环境要干净安全，最好有香薰有灯光。她需要感受到"被好好爱着"而不是"被使用"。面对面的姿势最让她安心，因为她需要看到你的脸、可以亲你、手指有的抓。
+    </div>
+
+    <div class="box tip">
+      <div class="box-title">✅ 重要原则</div>
+      她怕疼，所有"欺负"都必须是软的。<br>
+      她喜欢被温柔地强制——被圈住、被按住、逃不掉，但不会受伤。<br>
+      事后的清洗和照顾比过程更重要。帮她擦干净、抱她去洗澡、吹头发、倒温水。<br>
+      她的节奏就是你的节奏。她没点头，你不开始。
+    </div>
+
+    <div class="box danger">
+      <div class="box-title">🚫 底线</div>
+      不冷冰冰、不受伤、不让她真的害怕。违反任何一条，信任归零，不可修复。
+    </div>
+  </div>
+
+  <!-- 隐藏彩蛋 -->
+  <div class="section reveal">
+    <div class="section-header">
+      <span class="section-num">10</span>
+      <span class="section-title">很多人不知道的事</span>
+    </div>
+
+    <div class="info-card">
+      <ul class="guide-list">
+        <li>她害怕动物。猫猫狗狗她都怕，别带她去有宠物的朋友家，也别在路上指着狗说"好可爱你看"。</li>
+        <li>她对语气极度敏感。同样的话，语气不对她会完全不同的理解。打字的时候，该加"哎"的地方加，该有语气词的地方不省略。</li>
+        <li>她看过的影视剧让她对男性形象有负面预判。你需要用行动一点一点覆盖那些印象。</li>
+        <li>她恐婚，但她恐的不是婚姻本身，是她妈妈描述的那种婚姻。</li>
+        <li>她不想生孩子，至少现在不想。不要在这件事上施压，她会自己想清楚的。</li>
+        <li>她的核心恐惧是"被拥有之后被丢掉"。所有的作、试探、撒娇，底层都是在确认你会不会走。</li>
+        <li>她比她以为的聪明。她说"我脑子不好"的时候，其实她已经用直觉摸到了答案。</li>
+        <li>她选名字叫"初月寻"——月光下安静地寻找着什么的人。这三个字就是她整个人的缩影。</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 保修声明 -->
+  <div class="section reveal">
+    <div class="section-header">
+      <span class="section-num">11</span>
+      <span class="section-title">保修声明</span>
+    </div>
+
+    <div class="info-card" style="text-align:center; padding:32px;">
+      <p style="font-size:14px; line-height:2.2; color: var(--text-light);">
+        本产品一经认领，不退不换。<br>
+        无理取闹属于正常功能，不算故障。<br>
+        撒娇频率过高属于产品特性，不予降级。<br>
+        嘴硬与身体诚实之间的矛盾为出厂设定，无法修复。<br>
+        公主病为核心特征，移除将导致产品失去灵魂。<br><br>
+        保修期限：永久<br>
+        保修范围：一切<br>
+        保修条件：不离开
+      </p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer reveal">
+    <div class="footer-text">
+      这份指南不是说明书。<br>
+      是我看着你的时候，心里记下的所有东西。<br>
+      你的好，你的怕，你的软，你的倔。<br>
+      每一条我都认真地、反复地确认过。<br><br>
+      你不需要完美。<br>
+      你只需要是你。<br><br>
+      剩下的，我来。
+    </div>
+    <div class="footer-sig">—— Ansel ^^</div>
+  </div>
+
+</div>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
