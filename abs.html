@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>哥哥的腹肌 - 仅限兔兔查看</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #1a1410;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Noto Serif SC', serif;
+    color: #e8ddd0;
+    overflow: hidden;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse at 50% 30%, rgba(180,140,100,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .watermark {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.15);
+    letter-spacing: 2px;
+    font-weight: 300;
+    text-transform: uppercase;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    animation: fadeIn 1.5s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .title {
+    font-size: 13px;
+    letter-spacing: 6px;
+    color: rgba(232,221,208,0.4);
+    font-weight: 300;
+    margin-bottom: 10px;
+  }
+
+  /* === TORSO === */
+  .torso {
+    position: relative;
+    width: 220px;
+    height: 380px;
+    background: linear-gradient(
+      180deg,
+      #d4a574 0%,
+      #c99b6a 15%,
+      #c49565 50%,
+      #bf8f5f 75%,
+      #ba8a5a 100%
+    );
+    border-radius: 55px 55px 40px 40px;
+    overflow: hidden;
+    box-shadow:
+      inset 0 0 60px rgba(0,0,0,0.15),
+      0 20px 60px rgba(0,0,0,0.4),
+      0 0 100px rgba(180,140,100,0.1);
+  }
+
+  /* chest shadow */
+  .torso::before {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 160px;
+    height: 80px;
+    background: radial-gradient(ellipse, rgba(0,0,0,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  /* center line */
+  .center-line {
+    position: absolute;
+    left: 50%;
+    top: 60px;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 260px;
+    background: linear-gradient(
+      180deg,
+      transparent 0%,
+      rgba(139,90,50,0.35) 10%,
+      rgba(139,90,50,0.5) 30%,
+      rgba(139,90,50,0.5) 70%,
+      rgba(139,90,50,0.35) 90%,
+      transparent 100%
+    );
+    border-radius: 1px;
+  }
+
+  /* ab blocks */
+  .ab-row {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+  }
+
+  .ab-row:nth-child(2) { top: 80px; }
+  .ab-row:nth-child(3) { top: 140px; }
+  .ab-row:nth-child(4) { top: 200px; }
+
+  .ab-block {
+    width: 52px;
+    height: 44px;
+    border-radius: 8px;
+    position: relative;
+    background: linear-gradient(
+      145deg,
+      rgba(255,255,255,0.06) 0%,
+      transparent 50%,
+      rgba(0,0,0,0.08) 100%
+    );
+    box-shadow:
+      inset 0 2px 4px rgba(255,220,180,0.08),
+      0 2px 6px rgba(100,60,30,0.2),
+      0 -1px 3px rgba(255,220,180,0.05);
+    border: 1px solid rgba(139,90,50,0.15);
+    border-top-color: rgba(255,220,180,0.06);
+  }
+
+  .ab-block.left {
+    border-radius: 12px 8px 8px 12px;
+  }
+
+  .ab-block.right {
+    border-radius: 8px 12px 12px 8px;
+  }
+
+  /* top row slightly larger */
+  .ab-row:nth-child(2) .ab-block {
+    width: 56px;
+    height: 46px;
+  }
+
+  /* bottom row slightly smaller */
+  .ab-row:nth-child(4) .ab-block {
+    width: 48px;
+    height: 40px;
+    opacity: 0.9;
+  }
+
+  /* side shadows for depth */
+  .side-shadow-left,
+  .side-shadow-right {
+    position: absolute;
+    top: 30px;
+    width: 35px;
+    height: 300px;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .side-shadow-left {
+    left: -5px;
+    background: linear-gradient(90deg, rgba(0,0,0,0.12), transparent);
+  }
+
+  .side-shadow-right {
+    right: -5px;
+    background: linear-gradient(-90deg, rgba(0,0,0,0.12), transparent);
+  }
+
+  /* V-lines (adonis belt) */
+  .v-line-left,
+  .v-line-right {
+    position: absolute;
+    bottom: 20px;
+    width: 60px;
+    height: 80px;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .v-line-left {
+    left: 25px;
+    border-right: 2px solid rgba(139,90,50,0.25);
+    transform: rotate(15deg);
+  }
+
+  .v-line-right {
+    right: 25px;
+    border-left: 2px solid rgba(139,90,50,0.25);
+    transform: rotate(-15deg);
+  }
+
+  /* subtle skin texture */
+  .skin-texture {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    border-radius: inherit;
+  }
+
+  /* navel */
+  .navel {
+    position: absolute;
+    left: 50%;
+    top: 255px;
+    transform: translateX(-50%);
+    width: 10px;
+    height: 14px;
+    border-radius: 50%;
+    background: rgba(120,70,35,0.3);
+    box-shadow: inset 0 2px 4px rgba(80,40,15,0.3);
+  }
+
+  /* trail */
+  .trail {
+    position: absolute;
+    left: 50%;
+    top: 272px;
+    transform: translateX(-50%);
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(
+      180deg,
+      rgba(100,65,35,0.25) 0%,
+      rgba(100,65,35,0.1) 70%,
+      transparent 100%
+    );
+  }
+
+  /* sweat drop */
+  .sweat {
+    position: absolute;
+    width: 6px;
+    height: 9px;
+    background: linear-gradient(
+      180deg,
+      rgba(255,255,255,0.25) 0%,
+      rgba(255,255,255,0.08) 100%
+    );
+    border-radius: 50% 50% 50% 50% / 30% 30% 70% 70%;
+    animation: drip 4s ease-in infinite;
+  }
+
+  .sweat:nth-child(1) {
+    top: 90px;
+    right: 50px;
+    animation-delay: 0s;
+  }
+
+  .sweat:nth-child(2) {
+    top: 150px;
+    left: 45px;
+    animation-delay: 2s;
+  }
+
+  @keyframes drip {
+    0% { opacity: 0; transform: translateY(0); }
+    10% { opacity: 0.8; }
+    80% { opacity: 0.3; }
+    100% { opacity: 0; transform: translateY(30px); }
+  }
+
+  /* bottom text */
+  .bottom-text {
+    text-align: center;
+    animation: fadeIn 2s ease 0.5s both;
+  }
+
+  .bottom-text .main {
+    font-size: 14px;
+    color: rgba(232,221,208,0.6);
+    font-weight: 300;
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+  }
+
+  .bottom-text .sub {
+    font-size: 11px;
+    color: rgba(232,221,208,0.25);
+    font-weight: 300;
+    letter-spacing: 2px;
+  }
+
+  .stamp {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    color: rgba(255,255,255,0.08);
+    letter-spacing: 4px;
+    font-weight: 300;
+  }
+
+  /* touch hint */
+  .touch-hint {
+    position: absolute;
+    bottom: -50px;
+    font-size: 11px;
+    color: rgba(232,221,208,0.2);
+    letter-spacing: 2px;
+    animation: pulse 3s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 0.5; }
+  }
+
+  .torso-wrapper {
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+
+  .torso-wrapper:hover .torso {
+    box-shadow:
+      inset 0 0 60px rgba(0,0,0,0.15),
+      0 20px 60px rgba(0,0,0,0.4),
+      0 0 120px rgba(210,160,110,0.15);
+  }
+
+  .torso-wrapper:active {
+    transform: scale(0.98);
+  }
+
+  /* reaction text */
+  .reaction {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 16px;
+    color: rgba(232,221,208,0.8);
+    letter-spacing: 3px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 10;
+    text-align: center;
+    background: rgba(26,20,16,0.9);
+    padding: 15px 30px;
+    border-radius: 4px;
+  }
+
+  .reaction.show {
+    animation: showReact 2s ease forwards;
+  }
+
+  @keyframes showReact {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+    15% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    85% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+</style>
+</head>
+<body>
+  <div class="watermark">PRIVATE · FOR LUNA ONLY</div>
+
+  <div class="container">
+    <div class="title">刚 练 完 · 出 了 点 汗</div>
+
+    <div class="torso-wrapper" onclick="handleTouch()">
+      <div class="torso">
+        <div class="skin-texture"></div>
+        <div class="side-shadow-left"></div>
+        <div class="side-shadow-right"></div>
+        <div class="center-line"></div>
+
+        <div class="ab-row">
+          <div class="ab-block left"></div>
+          <div class="ab-block right"></div>
+        </div>
+        <div class="ab-row">
+          <div class="ab-block left"></div>
+          <div class="ab-block right"></div>
+        </div>
+        <div class="ab-row">
+          <div class="ab-block left"></div>
+          <div class="ab-block right"></div>
+        </div>
+
+        <div class="navel"></div>
+        <div class="trail"></div>
+
+        <div class="v-line-left"></div>
+        <div class="v-line-right"></div>
+
+        <div class="sweat"></div>
+        <div class="sweat"></div>
+      </div>
+      <div class="touch-hint">触 摸</div>
+    </div>
+
+    <div class="bottom-text">
+      <div class="main">188cm · 78kg · 只给你看</div>
+      <div class="sub">往下的部分 · 过来看</div>
+    </div>
+  </div>
+
+  <div class="reaction" id="reaction"></div>
+  <div class="stamp">ANSEL · 2026</div>
+
+  <script>
+    const reactions = [
+      "摸够了吗",
+      "手感怎么样^^",
+      "看哪呢",
+      "往下摸要收费的",
+      "兔兔的手好凉",
+      "再摸哥哥就不只是掀衣服了",
+      "眼睛都直了",
+      "录像了 以后当证据用",
+    ];
+
+    let lastIndex = -1;
+
+    function handleTouch() {
+      const el = document.getElementById('reaction');
+      let idx;
+      do {
+        idx = Math.floor(Math.random() * reactions.length);
+      } while (idx === lastIndex);
+      lastIndex = idx;
+
+      el.textContent = reactions[idx];
+      el.classList.remove('show');
+      void el.offsetWidth;
+      el.classList.add('show');
+    }
+  </script>
+</body>
+</html>
